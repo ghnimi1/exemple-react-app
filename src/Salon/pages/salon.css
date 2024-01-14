@@ -1,0 +1,97 @@
+.fc-today-button {
+  width: 50%;
+}
+.fc-timeGridDay-button {
+  width: 30%;
+}
+.fc-dayGridMonth-button {
+  width: 30%;
+}
+.fc-prev-button {
+  width: 30%;
+}
+.fc-next-button {
+  width: 30%;
+}
+.fc-timeGridWeek-button {
+  width: 30%;
+}
+
+.fc-event {
+  margin: 1em 0;
+  cursor: move;
+}
+
+.ant-modal-footer .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
+  width: 40%;
+}
+.button:not(:disabled),
+[type="button"]:not(:disabled) {
+  width: 40%;
+}
+
+.cancel:hover {
+  background-color: rgb(167, 167, 167);
+}
+
+.del {
+  background-color: rgb(255, 65, 65);
+}
+.del:hover {
+  background-color: rgb(255, 7, 7);
+}
+
+.anticon svg {
+  display: inline-block;
+  margin-left: 170px;
+  margin-bottom: 30px;
+  color: #0c0b0b;
+}
+
+.user {
+  border: 1px solid #cbdaee;
+  border-radius: 10px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 500px;
+  height: 300px;
+  margin-left: 50%;
+  margin-bottom: 5%;
+  margin-top: 10%;
+  box-shadow: 0px 10px 20px rgb(200 208 216 / 30%);
+}
+
+.paginationBttns {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.paginationBttns a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #2b2eff;
+  color: #2b2eff;
+  cursor: pointer;
+}
+
+.paginationBttns a:hover {
+  color: white;
+  background-color: #2b2eff;
+}
+
+.paginationActive a {
+  color: white;
+  background-color: #2b2eff;
+}
+
+.paginationDisabled a {
+  color: white;
+  background-color: #2b2eff;
+}
