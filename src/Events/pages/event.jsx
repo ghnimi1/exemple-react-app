@@ -474,3 +474,223 @@ function Event() {
 }
 
 export default Event;
+import { useMemo, useState } from "react";
+import PropTypes from "prop-types";
+
+// @mui material components
+import Grid from "@mui/material/Grid";
+
+// Soft UI Dashboard PRO React components
+import SoftBox from "components/SoftBox";
+
+// Soft UI Dashboard PRO React example components
+import EventCalendar from "./Calendar";
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import frLocale from '@fullcalendar/core/locales/fr'; 
+
+import { INITIAL_EVENTS, createEventId } from '../utils'
+import {Dialog} from "@mui/material";
+import SeanceDialog from "./seance-components/SeanceDialog";
+
+
+export default function InfoEmploi({formData}) { 
+   const [open, setOpen] = useState(false);
+  
+  const { formField, errors, touched, values } = formData;
+  console.log("formData---------------------------------",formData);
+  
+  const {
+    classe,
+    jours,
+    dateDebut,
+    dateFin,
+    heureDebut,
+    heureFin
+      } = values;
+      console.log(values);
+
+   const filteredJours=jours?.filter(jour=>jour.checked===true)
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+const eventContent = (arg) => {
+    console.log("-------------------",arg);
+    const cardStyle = {
+      border: '1px solid #fff',
+      borderRadius: '8px',
+      height: '100%',
+      margin:"0px",
+      boxShadow: '0 4px 8px 0 rgba(20, 124, 106, 0.2)',
+      backgroundColor: "#6a5acd",
+      fontFamily: 'Arial, sans-serif',
+    };
+  
+    const titleStyle = {
+      fontSize: '1.2em',
+      fontWeight: 'bold',
+      marginBottom: '8px',
+    };
+  
+    const timeTextStyle = {
+      fontSize: '1em',
+      color: '#fff',
+    };
+  
+    return (
+      <div style={cardStyle}>
+        <div style={titleStyle}>
+          {arg.event.title}
+        </div>
+        <div style={timeTextStyle}>
+          {arg.timeText}
+        </div>
+      </div>
+    );
+  };
+
+
+ const handleEventMouseEnter = (arg) => {
+    const updateButton = document.createElement('button');
+    updateButton.textContent = 'Update';
+    updateButton.addEventListener('click', () => {
+      // Logic to handle event update
+      handleUpdateEvent(arg.event); // Call your update event function
+    });
+  
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+      // Logic to handle event delete
+      handleDeleteEvent(arg.event); // Call your delete event function
+    });
+  
+    arg.el.appendChild(updateButton);
+    arg.el.appendChild(deleteButton);
+  };
+ const handleEventMouseLeave = (arg) => {
+    while (arg.el.firstChild) {
+      arg.el.removeChild(arg.el.firstChild); 
+    }
+  };
+ const handleUpdateEvent = (event) => {
+    // Function to handle event update
+    console.log('Updating event:', event);
+    
+    // You can add your logic here to handle the update of the event
+  };
+  
+const  handleDeleteEvent = (event) => {
+    // Function to handle event delete
+    console.log('Deleting event:', event);
+   /*  console.log('Deleting event:', clickInfo);
+    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      clickInfo.event.remove()
+  } */
+    // You can add your logic here to handle the deletion of the event
+  };
+
+
+
+
+   const handleDateSelect = (selectInfo) => {
+    setOpen(true)
+   /*  let title = prompt('Ajouter Matière')
+    let calendarApi = selectInfo.view.calendar
+    console.log(calendarApi);
+    calendarApi.unselect(); // clear date selection
+   
+    if (title) {
+      // Ajout de startTime et endTime dans le nouvel événement
+      let startTime = prompt('Heure de début (format HH:MM:SS)'); // Demande de l'heure de début
+      let endTime = prompt('Heure de fin (format HH:MM:SS)'); // Demande de l'heure de fin
+  
+      // Création de l'événement avec startTime et endTime
+      calendarApi.addEvent({
+        id: createEventId(),
+        title,
+        daysOfWeek: [ '4' ],
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay,
+        startTime, // Ajout de startTime à l'événement
+        endTime, // Ajout de endTime à l'événement
+      });
+    } */
+  };
+   
+
+const handleEventChange = (eventChangeInfo) => {
+  let title = prompt('Please enter a new title for your event', eventChangeInfo.event.toPlainObject().title);
+  
+  if (title) {
+    const calendarApi = eventChangeInfo.view.calendar;
+
+    calendarApi.getEventById(eventChangeInfo.event.id).setProp('title', title);
+    console.log('Event title updated using calendarApi:', title);
+  }
+};
+  return (
+    <SoftBox pt={3}>
+        <Grid container spacing={3}>      
+          <Grid item xs={12} xl={12} sx={{ height: "max-content" }}>
+            {useMemo(
+              () => (
+                <EventCalendar
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                headerToolbar={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'timeGridWeek,dayGridMonth,timeGridDay'
+                }}
+                  initialView="dayGridMonth"
+                  initialDate={dateDebut}
+                  validRange={{ start: dateDebut, end: dateFin }} 
+                  initialEvents={INITIAL_EVENTS}
+                  editable={true}
+                  selectable={true}
+                  selectMirror={true}
+                // dayMaxEvents={false}
+                  slotLabelFormat={{
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false, // Format en 24 heures
+                  }}
+                   businessHours={[
+                  {
+                    daysOfWeek: filteredJours?.map(jour=>jour.value),
+                    startTime: heureDebut, 
+                    endTime: heureFin, 
+                  }
+                ]} 
+                selectConstraint={{
+                  startTime: heureDebut, // Example start time constraint
+                  endTime:heureFin,   // Example end time constraint
+                  daysOfWeek: filteredJours?.map(jour=>jour.value), // Example days constraint (Monday to Friday)
+                }}
+                  locale={frLocale} 
+                  select={handleDateSelect}
+                  eventClick={handleEventChange}
+                  eventContent={eventContent} // Apply custom content to events
+                  eventDisplay="block" // Ensure events are block elements
+                  eventBackgroundColor="purple" // Set default background color for events
+                  eventBorderColor="purple" // Set default border color for events
+                  eventMouseEnter={handleEventMouseEnter}
+                  eventMouseLeave={handleEventMouseLeave}
+                />
+              ),
+            )}
+          </Grid>
+          <Dialog fullWidth maxWidth="lg" open={open} PaperProps={{ style: { backgroundColor: '#EEF1F4' } }}>
+               <SeanceDialog handleClose={handleClose} classe={classe}/>
+          </Dialog> 
+         </Grid>
+      </SoftBox>
+  )
+}
+InfoEmploi.propTypes = {
+  formData: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+};
